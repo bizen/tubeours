@@ -163,7 +163,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
 
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                setVolume(v => { const next = Math.min(100, v + 10); localStorage.setItem('tubeours_volume', String(next)); return next; });
+                setVolume(v => { const next = Math.min(100, v + 5); localStorage.setItem('tubeours_volume', String(next)); return next; });
                 clearTimeout(volumeTimerRef.current);
                 setShowVolume(true);
                 volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
@@ -172,7 +172,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
             }
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                setVolume(v => { const next = Math.max(0, v - 10); localStorage.setItem('tubeours_volume', String(next)); return next; });
+                setVolume(v => { const next = Math.max(0, v - 5); localStorage.setItem('tubeours_volume', String(next)); return next; });
                 clearTimeout(volumeTimerRef.current);
                 setShowVolume(true);
                 volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
@@ -347,10 +347,10 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                         {volume === 0 ? '🔇' : volume < 40 ? '🔈' : volume < 80 ? '🔉' : '🔊'}
                     </span>
                     <div style={{ display: 'flex', gap: '2px' }}>
-                        {Array.from({ length: 10 }).map((_, i) => (
+                        {Array.from({ length: 20 }).map((_, i) => (
                             <div key={i} style={{
                                 width: '3px', height: '14px', borderRadius: '2px',
-                                background: i < volume / 10 ? '#fff' : 'rgba(255,255,255,0.2)',
+                                background: i < volume / 5 ? '#fff' : 'rgba(255,255,255,0.2)',
                             }} />
                         ))}
                     </div>
