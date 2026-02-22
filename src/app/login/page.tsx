@@ -1,6 +1,7 @@
 'use client';
 
 import { createClient } from '@/lib/supabase/client';
+import LogoText from '@/components/LogoText';
 
 export default function Login() {
     const handleGoogleSignIn = async () => {
@@ -35,7 +36,7 @@ export default function Login() {
                 gap: '3rem'
             }}>
                 <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <h1 style={{ fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.05em' }}>tubeours</h1>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 700, letterSpacing: '-0.05em' }}><LogoText /></h1>
                     <p style={{ opacity: 0.5, fontSize: '0.875rem' }}>A continuous, lean-back YouTube curation experience.</p>
                 </div>
 

@@ -6,6 +6,7 @@ import YouTubePlayer from '@/components/player/YouTubePlayer';
 import { Power, LayoutGrid } from 'lucide-react';
 import DashboardOverlay from './DashboardOverlay';
 import ScheduleOverlay from './ScheduleOverlay';
+import LogoText from '@/components/LogoText';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import styles from '../../page.module.css';
@@ -281,7 +282,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                 <>
                     <header className={styles.header}>
                         <Link href="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <h1 className={styles.logo}>tubeours</h1>
+                            <h1 className={styles.logo}><LogoText /></h1>
                         </Link>
                         <p className={styles.channelInfo}>
                             {chLabel}{timetableTitle} • {getVideo(currentSlot).title}

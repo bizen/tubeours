@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import ChannelList from './ChannelList';
+import LogoText from '@/components/LogoText';
 
 const MAX_CHANNELS = 9;
 
@@ -71,7 +72,7 @@ export default async function Dashboard() {
         <div style={{ backgroundColor: '#000', height: '100vh', display: 'flex', flexDirection: 'column', color: '#fff', fontFamily: 'inherit', overflow: 'hidden' }}>
             {/* Top bar */}
             <div style={{ flexShrink: 0, padding: '1.25rem 2.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                <span style={{ fontSize: '1.05rem', fontWeight: 700, letterSpacing: '-0.04em' }}>tubeours</span>
+                <span style={{ fontSize: '1.05rem', fontWeight: 700, letterSpacing: '-0.04em' }}><LogoText /></span>
             </div>
 
             {/* Content */}
