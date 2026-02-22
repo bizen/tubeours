@@ -19,7 +19,7 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
     const [{ data: timetable }, { data: ownedTimetables }, { data: followRows }] = await Promise.all([
         supabase
             .from('timetables')
-            .select('id, title, source_type, user_id, is_public')
+            .select('id, title, source_type')
             .eq('id', timetableId)
             .single(),
         supabase
@@ -33,10 +33,6 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
             .select('timetable_id, timetables(id, title, description, is_public, timetable_slots(count))')
             .eq('user_id', user.id),
     ]);
-
-    const isOwner = !!timetable && timetable.user_id === user.id;
-    const isPublic = timetable?.is_public ?? false;
-    const isFollowing = (followRows ?? []).some(f => f.timetable_id === timetableId);
 
     const followedTimetables = (followRows ?? [])
         .map((f: { timetable_id: string; timetables: unknown }) => Array.isArray(f.timetables) ? f.timetables[0] : f.timetables)
@@ -132,9 +128,6 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
             overlayTimetables={allTimetables ?? []}
             overlayCurrentSlots={overlayCurrentSlots}
             overlayNextSlots={overlayNextSlots}
-            isOwner={isOwner}
-            isPublic={isPublic}
-            isFollowing={isFollowing}
         />
     );
 }

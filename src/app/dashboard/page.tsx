@@ -83,6 +83,19 @@ export default async function Dashboard() {
         }
     }
 
+    // Follower counts for user's public channels
+    let followerCounts: Record<string, number> = {};
+    const ownedIds = (timetables ?? []).map(t => t.id);
+    if (ownedIds.length > 0) {
+        const { data: followCountRows } = await supabase
+            .from('channel_follows')
+            .select('timetable_id')
+            .in('timetable_id', ownedIds);
+        for (const row of followCountRows ?? []) {
+            followerCounts[row.timetable_id] = (followerCounts[row.timetable_id] ?? 0) + 1;
+        }
+    }
+
     const count = timetables?.length ?? 0;
     const atLimit = count >= MAX_CHANNELS;
 
@@ -114,7 +127,7 @@ export default async function Dashboard() {
                 </div>
 
                 <div style={{ flex: 1, minHeight: 0 }}>
-                    <ChannelList timetables={timetables ?? []} followedTimetables={followedTimetables} followedIds={followedIds} currentSlots={currentSlots} nextSlots={nextSlots} />
+                    <ChannelList timetables={timetables ?? []} followedTimetables={followedTimetables} followedIds={followedIds} currentSlots={currentSlots} nextSlots={nextSlots} followerCounts={followerCounts} />
                 </div>
             </div>
         </div>

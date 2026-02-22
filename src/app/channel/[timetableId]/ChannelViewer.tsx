@@ -41,9 +41,6 @@ interface Props {
     overlayTimetables: OverlayTimetable[];
     overlayCurrentSlots: Record<string, { title: string }>;
     overlayNextSlots: Record<string, { title: string; time: string }>;
-    isOwner: boolean;
-    isPublic: boolean;
-    isFollowing: boolean;
 }
 
 function getVideo(slot: SlotData): VideoData {
@@ -84,7 +81,7 @@ async function fetchNextSlot(timetableId: string, afterTimestamp: string): Promi
     return next ?? fetchFirstSlot(timetableId);
 }
 
-export default function ChannelViewer({ timetableId, timetableTitle, initialSlot, channelIds, currentIndex, autoplay, displayMode: initialDisplayMode, overlayTimetables, overlayCurrentSlots, overlayNextSlots, isOwner, isPublic, isFollowing: initialIsFollowing }: Props) {
+export default function ChannelViewer({ timetableId, timetableTitle, initialSlot, channelIds, currentIndex, autoplay, displayMode: initialDisplayMode, overlayTimetables, overlayCurrentSlots, overlayNextSlots }: Props) {
     const router = useRouter();
     const [currentSlot, setCurrentSlot] = useState<SlotData | null>(initialSlot);
     const [nextSlot, setNextSlot] = useState<SlotData | null>(null);
@@ -94,23 +91,6 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
     const [displayMode, setDisplayMode] = useState<'fill' | 'fit'>(initialDisplayMode);
     const [showOverlay, setShowOverlay] = useState(false);
     const [scheduleTarget, setScheduleTarget] = useState<{ id: string; title: string } | null>(null);
-    const [followingState, setFollowingState] = useState(initialIsFollowing);
-    const [followLoading, setFollowLoading] = useState(false);
-
-    const handleFollowToggle = async (e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (followLoading) return;
-        setFollowLoading(true);
-        const supabase = createClient();
-        if (followingState) {
-            await supabase.from('channel_follows').delete().eq('timetable_id', timetableId);
-            setFollowingState(false);
-        } else {
-            await supabase.from('channel_follows').insert({ timetable_id: timetableId });
-            setFollowingState(true);
-        }
-        setFollowLoading(false);
-    };
 
     const showOverlayRef = useRef(false);
     useEffect(() => { showOverlayRef.current = showOverlay || !!scheduleTarget; }, [showOverlay, scheduleTarget]);
@@ -298,23 +278,6 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                         Dashboard →
                     </Link>
 
-                    {!isOwner && isPublic && (
-                        <button
-                            onClick={handleFollowToggle}
-                            disabled={followLoading}
-                            style={{
-                                position: 'absolute', top: '2rem', left: '2rem',
-                                background: 'none', border: '1px solid',
-                                borderColor: followingState ? 'rgba(169,255,28,0.4)' : 'rgba(255,255,255,0.15)',
-                                borderRadius: '4px', cursor: 'pointer', padding: '0.35rem 0.75rem',
-                                color: followingState ? '#A9FF1C' : 'rgba(255,255,255,0.4)',
-                                fontSize: '0.72rem', letterSpacing: '0.08em', fontFamily: 'inherit',
-                                transition: 'all 0.2s',
-                            }}
-                        >
-                            {followingState ? '✓ Following' : '+ Add to my channels'}
-                        </button>
-                    )}
                 </div>
             ) : (
                 <>

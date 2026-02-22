@@ -23,6 +23,7 @@ interface Props {
     followedIds?: Set<string>;
     currentSlots: Record<string, SlotInfo>;
     nextSlots: Record<string, NextSlotInfo>;
+    followerCounts?: Record<string, number>;
     onOpenSchedule?: (timetableId: string, timetableTitle: string) => void;
 }
 
@@ -30,7 +31,7 @@ function formatTime(iso: string): string {
     return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export default function ChannelList({ timetables: initial, followedTimetables: initialFollowed = [], followedIds, currentSlots, nextSlots, onOpenSchedule }: Props) {
+export default function ChannelList({ timetables: initial, followedTimetables: initialFollowed = [], followedIds, currentSlots, nextSlots, followerCounts = {}, onOpenSchedule }: Props) {
     const [timetables, setTimetables] = useState<Timetable[]>(initial);
     const [followed, setFollowed] = useState<Timetable[]>(initialFollowed);
     const [confirmingId, setConfirmingId] = useState<string | null>(null);
@@ -101,6 +102,9 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                 <div className={styles.footer}>
                                     <span className={styles.count}>{t.timetable_slots[0]?.count || 0} videos</span>
                                     {t.is_public && <span className={styles.badge}>Public</span>}
+                                    {t.is_public && (followerCounts[t.id] ?? 0) > 0 && (
+                                        <span className={styles.followerCount}>{followerCounts[t.id]} following</span>
+                                    )}
                                     {onOpenSchedule ? (
                                         <button className={styles.linkSchedule} onClick={() => onOpenSchedule(t.id, t.title)}>Schedule</button>
                                     ) : (

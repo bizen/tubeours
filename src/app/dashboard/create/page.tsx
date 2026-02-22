@@ -2,10 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { extractYouTubePlaylistId, extractYouTubeChannelIdentifier } from '@/lib/youtube/api';
-import { Link as LinkIcon, Sparkles } from 'lucide-react';
+import { Link as LinkIcon, Sparkles, Tv2 } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
-type Mode = 'playlist' | 'ai';
+type Mode = 'playlist' | 'ai' | 'import';
+
+function extractTubeoursChannelId(url: string): string | null {
+    const match = url.match(/\/channel\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+    return match ? match[1] : null;
+}
 
 const AI_LOADING_MESSAGES = [
     'AI is curating your theme…',
@@ -23,6 +29,8 @@ export default function CreateChannel() {
     const [urlInput, setUrlInput] = useState('');
     // AI mode
     const [theme, setTheme] = useState('');
+    // Import mode
+    const [importUrl, setImportUrl] = useState('');
     // State
     const [isGenerating, setIsGenerating] = useState(false);
     const [error, setError] = useState('');
@@ -71,7 +79,7 @@ export default function CreateChannel() {
                 setError(err.message || 'Something went wrong.');
                 setIsGenerating(false);
             }
-        } else {
+        } else if (mode === 'ai') {
             if (!theme.trim()) { setError('Please describe the theme for your channel.'); return; }
             try {
                 setIsGenerating(true);
@@ -90,13 +98,35 @@ export default function CreateChannel() {
                 setError(err.message || 'Something went wrong.');
                 setIsGenerating(false);
             }
+        } else {
+            // import mode
+            const channelId = extractTubeoursChannelId(importUrl);
+            if (!channelId) { setError('Enter a valid tubeours channel link.'); return; }
+            try {
+                setIsGenerating(true);
+                const supabase = createClient();
+                const { error: dbError } = await supabase
+                    .from('channel_follows')
+                    .upsert({ timetable_id: channelId }, { onConflict: 'user_id,timetable_id' });
+                if (dbError) throw dbError;
+                window.location.href = '/dashboard';
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (err: any) {
+                setError(err.message || 'Something went wrong.');
+                setIsGenerating(false);
+            }
         }
     };
 
-    const canSubmit = !isGenerating && !!title && (mode === 'playlist' ? !!urlInput : !!theme.trim());
+    const canSubmit = !isGenerating && (
+        mode === 'playlist' ? (!!title && !!urlInput) :
+        mode === 'ai' ? (!!title && !!theme.trim()) :
+        !!importUrl
+    );
 
     const loadingLabel = mode === 'ai'
         ? AI_LOADING_MESSAGES[loadingMsgIdx]
+        : mode === 'import' ? 'Importing…'
         : 'Creating…';
 
     return (
@@ -125,7 +155,40 @@ export default function CreateChannel() {
                         onClick={() => { setMode('ai'); setError(''); }}
                         accent
                     />
+                    <ModeTab
+                        label="tubeours Channel"
+                        active={mode === 'import'}
+                        onClick={() => { setMode('import'); setError(''); }}
+                    />
                 </div>
+
+                {/* Import mode: just a URL input */}
+                {mode === 'import' ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                        <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.35)', margin: 0, lineHeight: 1.6 }}>
+                            Paste a shared tubeours channel link to add it to your channel list. You&apos;ll watch in sync with the original schedule.
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '0.5rem' }}>
+                            <Tv2 size={15} color="rgba(255,255,255,0.25)" style={{ flexShrink: 0 }} />
+                            <input
+                                value={importUrl}
+                                onChange={(e) => setImportUrl(e.target.value)}
+                                placeholder="https://tubeours.app/channel/…"
+                                autoFocus
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#fff',
+                                    width: '100%',
+                                    outline: 'none',
+                                    fontSize: '0.9rem',
+                                    fontFamily: 'inherit',
+                                }}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                <>
 
                 {/* Channel name */}
                 <input
@@ -223,6 +286,8 @@ export default function CreateChannel() {
                     />
                     <span style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)' }}>Publish publicly</span>
                 </label>
+                </>
+                )}
 
                 {/* Error */}
                 {error && (
@@ -247,7 +312,7 @@ export default function CreateChannel() {
                             letterSpacing: isGenerating ? '0.04em' : undefined,
                         }}
                     >
-                        {isGenerating ? loadingLabel : 'Create Channel'}
+                        {isGenerating ? loadingLabel : mode === 'import' ? 'Import Channel' : 'Create Channel'}
                     </button>
                 </div>
             </form>

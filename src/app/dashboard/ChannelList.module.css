@@ -152,6 +152,13 @@
   text-transform: uppercase;
 }
 
+.followerCount {
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.2);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
 .linkSchedule {
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.28);
