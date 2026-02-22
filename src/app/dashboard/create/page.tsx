@@ -105,9 +105,11 @@ export default function CreateChannel() {
             try {
                 setIsGenerating(true);
                 const supabase = createClient();
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) throw new Error('Not authenticated');
                 const { error: dbError } = await supabase
                     .from('channel_follows')
-                    .upsert({ timetable_id: channelId }, { onConflict: 'user_id,timetable_id' });
+                    .upsert({ user_id: user.id, timetable_id: channelId }, { onConflict: 'user_id,timetable_id' });
                 if (dbError) throw dbError;
                 window.location.href = '/dashboard';
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
