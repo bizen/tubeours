@@ -139,7 +139,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
 
     // Keyboard channel navigation + Space toggle
     useEffect(() => {
-        const flash = (kind: 'left' | 'right' | 'num', n?: number, empty?: boolean) => {
+        const flash = (kind: 'left' | 'right' | 'num' | 'up' | 'down', n?: number, empty?: boolean) => {
             clearTimeout(feedbackTimer.current);
             feedbackIdRef.current++;
             setKeyFeedback({ kind, n, id: feedbackIdRef.current, empty });
