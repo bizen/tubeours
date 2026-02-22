@@ -4,6 +4,13 @@ import Link from 'next/link';
 import ChannelList from './ChannelList';
 import LogoText from '@/components/LogoText';
 
+async function signOut() {
+    'use server';
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+    redirect('/login');
+}
+
 const MAX_CHANNELS = 9;
 
 export interface SlotInfo {
@@ -71,8 +78,13 @@ export default async function Dashboard() {
     return (
         <div style={{ backgroundColor: '#000', height: '100vh', display: 'flex', flexDirection: 'column', color: '#fff', fontFamily: 'inherit', overflow: 'hidden' }}>
             {/* Top bar */}
-            <div style={{ flexShrink: 0, padding: '1.25rem 2.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+            <div style={{ flexShrink: 0, padding: '1.25rem 2.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '1.05rem', fontWeight: 700, letterSpacing: '-0.04em' }}><LogoText /></span>
+                <form action={signOut}>
+                    <button type="submit" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.72rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'inherit', letterSpacing: '0.05em' }}>
+                        Sign out
+                    </button>
+                </form>
             </div>
 
             {/* Content */}
