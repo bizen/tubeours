@@ -103,8 +103,11 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                     </div>
                                 )}
                                 <div className={styles.footer}>
-                                    {t.is_public && <span className={styles.badge}>Public</span>}
-                                    {t.is_public && (followerCounts[t.id] ?? 0) > 0 && (
+                                    {isFollowed
+                                        ? <span className={styles.badge}>📺</span>
+                                        : t.is_public && <span className={styles.badge}>📡</span>
+                                    }
+                                    {(followerCounts[t.id] ?? 0) > 0 && (
                                         <span className={styles.followerCount}>👀 {followerCounts[t.id]}</span>
                                     )}
                                     <span className={styles.footerSpacer} />

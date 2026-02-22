@@ -54,6 +54,22 @@ export default function CreateChannel() {
             return;
         }
 
+        // Check 9-channel limit
+        {
+            const supabase = createClient();
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const [{ count: ownedCount }, { count: followedCount }] = await Promise.all([
+                    supabase.from('timetables').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+                    supabase.from('channel_follows').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
+                ]);
+                if ((ownedCount ?? 0) + (followedCount ?? 0) >= 9) {
+                    setError('You have reached the maximum of 9 channels.');
+                    return;
+                }
+            }
+        }
+
         if (mode === 'playlist') {
             if (!urlInput) { setError('Playlist or channel URL is required.'); return; }
             const isPlaylist = !!extractYouTubePlaylistId(urlInput);

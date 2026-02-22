@@ -89,14 +89,17 @@ export default async function Dashboard() {
         }
     }
 
-    // Follower counts for user's public channels
+    // Follower counts for all displayed channels
     let followerCounts: Record<string, number> = {};
-    const ownedIds = (timetables ?? []).map(t => t.id);
-    if (ownedIds.length > 0) {
+    const allDisplayedIds = [
+        ...(timetables ?? []).map(t => t.id),
+        ...followedTimetables.map((t: { id: string }) => t.id),
+    ];
+    if (allDisplayedIds.length > 0) {
         const { data: followCountRows } = await supabase
             .from('channel_follows')
             .select('timetable_id')
-            .in('timetable_id', ownedIds);
+            .in('timetable_id', allDisplayedIds);
         for (const row of followCountRows ?? []) {
             followerCounts[row.timetable_id] = (followerCounts[row.timetable_id] ?? 0) + 1;
         }
