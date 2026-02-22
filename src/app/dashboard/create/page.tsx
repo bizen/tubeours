@@ -49,7 +49,7 @@ export default function CreateChannel() {
         e.preventDefault();
         setError('');
 
-        if (!title) {
+        if (mode !== 'import' && !title) {
             setError('Channel name is required.');
             return;
         }
