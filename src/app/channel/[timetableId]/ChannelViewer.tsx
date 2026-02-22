@@ -97,7 +97,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
         const supabase = createClient();
         await supabase.auth.updateUser({ data: { display_mode: mode } });
     };
-    const [keyFeedback, setKeyFeedback] = useState<{ kind: 'left' | 'right' | 'num'; n?: number; id: number; empty?: boolean } | null>(null);
+    const [keyFeedback, setKeyFeedback] = useState<{ kind: 'left' | 'right' | 'num' | 'up' | 'down'; n?: number; id: number; empty?: boolean } | null>(null);
     const [volume, setVolume] = useState(100);
     const [showVolume, setShowVolume] = useState(false);
     const volumeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -160,24 +160,20 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
 
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                setVolume(v => {
-                    const next = Math.min(100, v + 10);
-                    clearTimeout(volumeTimerRef.current);
-                    setShowVolume(true);
-                    volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
-                    return next;
-                });
+                setVolume(v => Math.min(100, v + 10));
+                clearTimeout(volumeTimerRef.current);
+                setShowVolume(true);
+                volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
+                flash('up');
                 return;
             }
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                setVolume(v => {
-                    const next = Math.max(0, v - 10);
-                    clearTimeout(volumeTimerRef.current);
-                    setShowVolume(true);
-                    volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
-                    return next;
-                });
+                setVolume(v => Math.max(0, v - 10));
+                clearTimeout(volumeTimerRef.current);
+                setShowVolume(true);
+                volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
+                flash('down');
                 return;
             }
 
@@ -339,7 +335,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
 
             {showVolume && (
                 <div style={{
-                    position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)',
+                    position: 'fixed', bottom: '6rem', left: '50%', transform: 'translateX(-50%)',
                     display: 'flex', alignItems: 'center', gap: '0.6rem',
                     background: 'rgba(0,0,0,0.6)', borderRadius: '999px',
                     padding: '0.4rem 0.9rem', zIndex: 100, pointerEvents: 'none',
@@ -368,10 +364,12 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                             ? { position: 'fixed', left: '2.5rem', top: '50%', marginTop: '-1.375rem', zIndex: 100, pointerEvents: 'none' }
                             : keyFeedback.kind === 'right'
                             ? { position: 'fixed', right: '2.5rem', top: '50%', marginTop: '-1.375rem', zIndex: 100, pointerEvents: 'none' }
+                            : (keyFeedback.kind === 'up' || keyFeedback.kind === 'down')
+                            ? { position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', zIndex: 100, pointerEvents: 'none' }
                             : { position: 'fixed', bottom: '3rem', left: `calc(${(keyFeedback.n! - 1) / 8} * (100% - 7rem) + 2.5rem)`, zIndex: 100, pointerEvents: 'none' }
                     }
                 >
-                    {keyFeedback.kind === 'left' ? '←' : keyFeedback.kind === 'right' ? '→' : keyFeedback.n}
+                    {keyFeedback.kind === 'left' ? '←' : keyFeedback.kind === 'right' ? '→' : keyFeedback.kind === 'up' ? '↑' : keyFeedback.kind === 'down' ? '↓' : keyFeedback.n}
                 </div>
             )}
         </div>
