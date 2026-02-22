@@ -84,6 +84,7 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                             <div className={styles.body}>
                                 <p className={styles.title}>{t.title}</p>
                                 <p className={styles.desc}>{t.description ?? ''}</p>
+                                <span className={styles.count}>{t.timetable_slots[0]?.count || 0} videos</span>
                                 {(currentSlots[t.id] || nextSlots[t.id]) && (
                                     <div className={styles.scheduleInfo}>
                                         {currentSlots[t.id] && (
@@ -100,7 +101,6 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                     </div>
                                 )}
                                 <div className={styles.footer}>
-                                    <span className={styles.count}>{t.timetable_slots[0]?.count || 0} videos</span>
                                     {t.is_public && <span className={styles.badge}>Public</span>}
                                     {t.is_public && (followerCounts[t.id] ?? 0) > 0 && (
                                         <span className={styles.followerCount}>👀 {followerCounts[t.id]}</span>

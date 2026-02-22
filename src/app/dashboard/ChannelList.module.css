@@ -133,13 +133,15 @@
   gap: 0.7rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-top: 0.65rem;
+  justify-content: flex-end;
 }
 
 .count {
-  font-size: 0.68rem;
+  font-size: 0.63rem;
   color: rgba(255, 255, 255, 0.2);
-  flex: 1;
   font-variant-numeric: tabular-nums;
+  margin-top: 0.3rem;
+  margin-bottom: 0;
 }
 
 .badge {
