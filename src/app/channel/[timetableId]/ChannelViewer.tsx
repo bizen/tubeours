@@ -98,7 +98,10 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
         await supabase.auth.updateUser({ data: { display_mode: mode } });
     };
     const [keyFeedback, setKeyFeedback] = useState<{ kind: 'left' | 'right' | 'num' | 'up' | 'down'; n?: number; id: number; empty?: boolean } | null>(null);
-    const [volume, setVolume] = useState(100);
+    const [volume, setVolume] = useState(() => {
+        if (typeof window === 'undefined') return 100;
+        return Number(localStorage.getItem('tubeours_volume') ?? 100);
+    });
     const [showVolume, setShowVolume] = useState(false);
     const volumeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -160,7 +163,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
 
             if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                setVolume(v => Math.min(100, v + 10));
+                setVolume(v => { const next = Math.min(100, v + 10); localStorage.setItem('tubeours_volume', String(next)); return next; });
                 clearTimeout(volumeTimerRef.current);
                 setShowVolume(true);
                 volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
@@ -169,7 +172,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
             }
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                setVolume(v => Math.max(0, v - 10));
+                setVolume(v => { const next = Math.max(0, v - 10); localStorage.setItem('tubeours_volume', String(next)); return next; });
                 clearTimeout(volumeTimerRef.current);
                 setShowVolume(true);
                 volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
