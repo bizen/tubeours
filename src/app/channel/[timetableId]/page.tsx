@@ -15,11 +15,11 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
 
     if (!user) redirect('/login');
 
-    // Fetch current timetable + all user timetables (keyboard nav + overlay)
-    const [{ data: timetable }, { data: allTimetables }] = await Promise.all([
+    // Fetch current timetable + owned timetables + followed timetables
+    const [{ data: timetable }, { data: ownedTimetables }, { data: followRows }] = await Promise.all([
         supabase
             .from('timetables')
-            .select('id, title, source_type')
+            .select('id, title, source_type, user_id, is_public')
             .eq('id', timetableId)
             .single(),
         supabase
@@ -28,7 +28,21 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
             .eq('user_id', user.id)
             .order('created_at', { ascending: true })
             .limit(9),
+        supabase
+            .from('channel_follows')
+            .select('timetable_id, timetables(id, title, description, is_public, timetable_slots(count))')
+            .eq('user_id', user.id),
     ]);
+
+    const isOwner = !!timetable && timetable.user_id === user.id;
+    const isPublic = timetable?.is_public ?? false;
+    const isFollowing = (followRows ?? []).some(f => f.timetable_id === timetableId);
+
+    const followedTimetables = (followRows ?? [])
+        .map((f: { timetable_id: string; timetables: unknown }) => Array.isArray(f.timetables) ? f.timetables[0] : f.timetables)
+        .filter(Boolean) as { id: string; title: string; description: string | null; is_public: boolean; timetable_slots: { count: number }[] }[];
+
+    const allTimetables = [...(ownedTimetables ?? []), ...followedTimetables];
 
     if (!timetable) notFound();
 
@@ -118,6 +132,9 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
             overlayTimetables={allTimetables ?? []}
             overlayCurrentSlots={overlayCurrentSlots}
             overlayNextSlots={overlayNextSlots}
+            isOwner={isOwner}
+            isPublic={isPublic}
+            isFollowing={isFollowing}
         />
     );
 }

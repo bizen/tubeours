@@ -19,6 +19,8 @@ interface Timetable {
 
 interface Props {
     timetables: Timetable[];
+    followedTimetables?: Timetable[];
+    followedIds?: Set<string>;
     currentSlots: Record<string, SlotInfo>;
     nextSlots: Record<string, NextSlotInfo>;
     onOpenSchedule?: (timetableId: string, timetableTitle: string) => void;
@@ -28,10 +30,17 @@ function formatTime(iso: string): string {
     return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export default function ChannelList({ timetables: initial, currentSlots, nextSlots, onOpenSchedule }: Props) {
+export default function ChannelList({ timetables: initial, followedTimetables: initialFollowed = [], followedIds, currentSlots, nextSlots, onOpenSchedule }: Props) {
     const [timetables, setTimetables] = useState<Timetable[]>(initial);
+    const [followed, setFollowed] = useState<Timetable[]>(initialFollowed);
     const [confirmingId, setConfirmingId] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    const handleUnfollow = async (id: string) => {
+        setFollowed(f => f.filter(t => t.id !== id));
+        const supabase = createClient();
+        await supabase.from('channel_follows').delete().eq('timetable_id', id);
+    };
 
     const handleShare = (id: string) => {
         const url = `${window.location.origin}/channel/${id}`;
@@ -55,6 +64,7 @@ export default function ChannelList({ timetables: initial, currentSlots, nextSlo
     };
 
     return (
+        <>
         <div className={styles.grid}>
             {Array.from({ length: MAX_CHANNELS }).map((_, i) => {
                 const t = timetables[i];
@@ -150,5 +160,37 @@ export default function ChannelList({ timetables: initial, currentSlots, nextSlo
                 );
             })}
         </div>
+
+        {followed.length > 0 && (
+            <div style={{ flexShrink: 0, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.75rem', marginTop: '0.75rem' }}>
+                <p style={{ fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', marginBottom: '0.5rem' }}>
+                    Following
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    {followed.map(t => (
+                        <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.45rem 0.6rem', borderRadius: '4px', background: '#0a0a0a' }}>
+                            <Link href={`/channel/${t.id}`} style={{ flex: 1, textDecoration: 'none', color: 'rgba(255,255,255,0.65)', fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {t.title}
+                            </Link>
+                            {currentSlots[t.id] && (
+                                <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.28)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '12rem', flexShrink: 0 }}>
+                                    {currentSlots[t.id].title}
+                                </span>
+                            )}
+                            <button
+                                onClick={() => handleUnfollow(t.id)}
+                                title="Unfollow"
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.18)', padding: '0.15rem', display: 'flex', alignItems: 'center', flexShrink: 0 }}
+                                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,80,80,0.7)'; }}
+                                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.18)'; }}
+                            >
+                                <Trash2 size={11} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )}
+        </>
     );
 }

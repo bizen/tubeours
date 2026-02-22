@@ -28,14 +28,25 @@ export default async function Dashboard() {
 
     if (!user) return redirect('/login');
 
-    const { data: timetables } = await supabase
-        .from('timetables')
-        .select('*, timetable_slots(count)')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: true })
-        .limit(MAX_CHANNELS);
+    const [{ data: timetables }, { data: followRows }] = await Promise.all([
+        supabase
+            .from('timetables')
+            .select('*, timetable_slots(count)')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: true })
+            .limit(MAX_CHANNELS),
+        supabase
+            .from('channel_follows')
+            .select('timetable_id, timetables(id, title, description, is_public, timetable_slots(count))')
+            .eq('user_id', user.id),
+    ]);
 
-    const ids = (timetables ?? []).map(t => t.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const followedTimetables = (followRows ?? []).map((f: any) => Array.isArray(f.timetables) ? f.timetables[0] : f.timetables).filter(Boolean);
+    const followedIds = new Set(followedTimetables.map((t: { id: string }) => t.id));
+
+    const allIds = [...(timetables ?? []), ...followedTimetables].map((t: { id: string }) => t.id);
+    const ids = allIds;
     let currentSlots: Record<string, SlotInfo> = {};
     let nextSlots: Record<string, NextSlotInfo> = {};
 
@@ -103,7 +114,7 @@ export default async function Dashboard() {
                 </div>
 
                 <div style={{ flex: 1, minHeight: 0 }}>
-                    <ChannelList timetables={timetables ?? []} currentSlots={currentSlots} nextSlots={nextSlots} />
+                    <ChannelList timetables={timetables ?? []} followedTimetables={followedTimetables} followedIds={followedIds} currentSlots={currentSlots} nextSlots={nextSlots} />
                 </div>
             </div>
         </div>
