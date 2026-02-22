@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Trash2, Pencil } from 'lucide-react';
+import { Trash2, Pencil, Link2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import styles from './ChannelList.module.css';
 import type { SlotInfo, NextSlotInfo } from './page';
@@ -31,6 +31,14 @@ function formatTime(iso: string): string {
 export default function ChannelList({ timetables: initial, currentSlots, nextSlots, onOpenSchedule }: Props) {
     const [timetables, setTimetables] = useState<Timetable[]>(initial);
     const [confirmingId, setConfirmingId] = useState<string | null>(null);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+
+    const handleShare = (id: string) => {
+        const url = `${window.location.origin}/channel/${id}`;
+        navigator.clipboard.writeText(url);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+    };
 
     const handleDelete = async (id: string) => {
         const prev = timetables;
@@ -91,6 +99,17 @@ export default function ChannelList({ timetables: initial, currentSlots, nextSlo
                                     <Link href={`/channel/${t.id}`} className={styles.linkWatch}>Watch →</Link>
                                 </div>
                             </div>
+
+                            {/* Share button (only when public) */}
+                            {t.is_public && (
+                                <button
+                                    className={`${styles.shareBtn} ${copiedId === t.id ? styles.shareBtnCopied : ''}`}
+                                    onClick={() => handleShare(t.id)}
+                                    title="Copy link"
+                                >
+                                    <Link2 size={12} />
+                                </button>
+                            )}
 
                             {/* Edit button */}
                             <Link href={`/dashboard/edit/${t.id}`} className={styles.editBtn} title="Edit channel">

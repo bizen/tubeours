@@ -289,6 +289,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                         </p>
                     </header>
 
+
                     <main className={styles.main}>
                         <YouTubePlayer
                             key={currentSlot.id}
