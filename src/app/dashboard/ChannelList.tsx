@@ -103,7 +103,7 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                     <span className={styles.count}>{t.timetable_slots[0]?.count || 0} videos</span>
                                     {t.is_public && <span className={styles.badge}>Public</span>}
                                     {t.is_public && (followerCounts[t.id] ?? 0) > 0 && (
-                                        <span className={styles.followerCount}>{followerCounts[t.id]} following</span>
+                                        <span className={styles.followerCount}>👀 {followerCounts[t.id]}</span>
                                     )}
                                     {onOpenSchedule ? (
                                         <button className={styles.linkSchedule} onClick={() => onOpenSchedule(t.id, t.title)}>Schedule</button>
