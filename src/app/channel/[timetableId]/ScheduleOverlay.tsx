@@ -139,7 +139,7 @@ export default function ScheduleOverlay({ timetableId, timetableTitle, onClose }
                 ) : (
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: `repeat(${Math.max(days.length, 1)}, calc(100vw / 3))`,
+                        gridTemplateColumns: `repeat(${Math.max(days.length, 1)}, min(85vw, 280px))`,
                         flex: 1,
                         minHeight: 0,
                         overflowX: 'auto',

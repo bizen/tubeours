@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import ChannelList from './ChannelList';
 import LogoText from '@/components/LogoText';
+import styles from './dashboard.module.css';
 
 async function signOut() {
     'use server';
@@ -109,9 +110,9 @@ export default async function Dashboard() {
     const atLimit = count >= MAX_CHANNELS;
 
     return (
-        <div style={{ backgroundColor: '#000', height: '100vh', display: 'flex', flexDirection: 'column', color: '#fff', fontFamily: 'inherit', overflow: 'hidden' }}>
+        <div className={styles.container}>
             {/* Top bar */}
-            <div style={{ flexShrink: 0, padding: '1.25rem 2.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className={styles.topBar}>
                 <span style={{ fontSize: '1.05rem', fontWeight: 700, letterSpacing: '-0.04em' }}><LogoText /></span>
                 <form action={signOut}>
                     <button type="submit" style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.72rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'inherit', letterSpacing: '0.05em' }}>
@@ -121,7 +122,7 @@ export default async function Dashboard() {
             </div>
 
             {/* Content */}
-            <div style={{ flex: 1, minHeight: 0, maxWidth: '900px', width: '100%', margin: '0 auto', padding: '1.5rem 2.5rem', display: 'flex', flexDirection: 'column' }}>
+            <div className={styles.content}>
                 <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' }}>
                     <h1 style={{ fontSize: '0.72rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
                         Your Channels
@@ -135,7 +136,7 @@ export default async function Dashboard() {
                     )}
                 </div>
 
-                <div style={{ flex: 1, minHeight: 0 }}>
+                <div className={styles.channelListWrapper}>
                     <ChannelList timetables={timetables ?? []} followedTimetables={followedTimetables} followedIds={followedIds} currentSlots={currentSlots} nextSlots={nextSlots} followerCounts={followerCounts} />
                 </div>
             </div>

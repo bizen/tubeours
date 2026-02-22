@@ -1,0 +1,62 @@
+/* ── Dashboard page layout ── */
+
+.container {
+  background-color: #000;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  overflow: hidden;
+}
+
+.topBar {
+  flex-shrink: 0;
+  padding: 1.25rem 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.channelListWrapper {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .container {
+    /* Let content set its own height; allow scroll */
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+
+  .topBar {
+    padding: 1rem 1.25rem;
+  }
+
+  .content {
+    padding: 1.25rem 1rem;
+    /* Allow content to grow with the grid */
+    flex: none;
+    min-height: unset;
+  }
+
+  .channelListWrapper {
+    flex: none;
+    min-height: unset;
+  }
+}

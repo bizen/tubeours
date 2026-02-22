@@ -2,6 +2,8 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  /* Use dynamic viewport height on mobile to account for browser UI */
+  height: 100dvh;
   overflow: hidden;
   background-color: #000;
 }
@@ -227,4 +229,52 @@
   22%  { opacity: 1; transform: scale(1); }
   72%  { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(0.94); }
+}
+
+/* ── Mobile responsive ── */
+@media (max-width: 640px) {
+  .header {
+    top: 1rem;
+    left: 1rem;
+    gap: 0.3rem;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .channelInfo {
+    font-size: 0.75rem;
+  }
+
+  .clockGroup {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .clock {
+    font-size: 1.75rem;
+  }
+
+  .nextInfo {
+    font-size: 0.6rem;
+    max-width: 12rem;
+  }
+
+  .powerOffButton {
+    bottom: 1.5rem;
+    right: 1.25rem;
+    padding: 0.75rem;
+  }
+
+  .dashboardButton {
+    bottom: 1.5rem;
+    right: 4.25rem;
+    padding: 0.75rem;
+  }
+
+  /* Swipe hint replaces keycap feedback on mobile */
+  .keycap {
+    display: none;
+  }
 }
