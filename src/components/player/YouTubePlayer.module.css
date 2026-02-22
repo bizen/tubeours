@@ -2,6 +2,8 @@
     position: relative;
     width: 100vw;
     height: 100vh;
+    /* Dynamic viewport height avoids the mobile browser toolbar gap */
+    height: 100dvh;
     background-color: var(--background);
     overflow: hidden;
     display: flex;
@@ -30,7 +32,9 @@
     width: 100vw;
     height: 56.25vw;
     min-height: 100vh;
+    min-height: 100dvh;
     min-width: 177.77vh;
+    min-width: 177.77dvh;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -40,8 +44,8 @@
 
 /* Fit to Screen: maintains 16:9 aspect ratio with letterboxing */
 .fit iframe {
-    width: min(100vw, 177.77vh);
-    height: min(100vh, 56.25vw);
+    width: min(100vw, 177.77vh, 177.77dvh);
+    height: min(100vh, 100dvh, 56.25vw);
     min-height: unset;
     min-width: unset;
     position: absolute;

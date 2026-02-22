@@ -242,7 +242,7 @@ export default function CreateChannel() {
                         width: '100%',
                         outline: 'none',
                         resize: 'none',
-                        fontSize: '0.95rem',
+                        fontSize: '1rem',
                         fontFamily: 'inherit',
                     }}
                 />
@@ -261,7 +261,7 @@ export default function CreateChannel() {
                                 color: '#fff',
                                 width: '100%',
                                 outline: 'none',
-                                fontSize: '0.9rem',
+                                fontSize: '1rem',
                                 fontFamily: 'inherit',
                             }}
                         />

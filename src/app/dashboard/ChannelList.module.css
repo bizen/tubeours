@@ -8,6 +8,24 @@
   height: 100%;
 }
 
+/* ── Tablet: 2-column ── */
+@media (max-width: 700px) and (min-width: 481px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, auto);
+    height: auto;
+  }
+}
+
+/* ── Mobile: single-column ── */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(9, auto);
+    height: auto;
+  }
+}
+
 /* ── Filled card ── */
 .card {
   position: relative;
@@ -257,6 +275,52 @@
 
 .trashBtn:hover {
   color: rgba(255, 80, 80, 0.7) !important;
+}
+
+/* ── Mobile: always show action buttons, bigger tap targets ── */
+@media (max-width: 700px) {
+  .shareBtn,
+  .editBtn,
+  .trashBtn {
+    color: rgba(255, 255, 255, 0.22);
+    padding: 0.5rem;
+    /* Enlarge tap area */
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    justify-content: center;
+  }
+
+  .trashBtn {
+    top: 0.4rem;
+    right: 0.3rem;
+  }
+
+  .editBtn {
+    top: 0.4rem;
+    right: 2.4rem;
+  }
+
+  .shareBtn {
+    top: 0.4rem;
+    right: 4.5rem;
+  }
+
+  .card {
+    min-height: 7rem;
+  }
+
+  .empty {
+    min-height: 3.5rem;
+  }
+
+  .linkSchedule,
+  .linkWatch {
+    font-size: 0.8rem;
+    padding: 0.25rem 0;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+  }
 }
 
 /* ── Delete confirm overlay ── */

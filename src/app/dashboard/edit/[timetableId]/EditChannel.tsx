@@ -164,7 +164,7 @@ export default function EditChannel({ timetable, aiTheme }: Props) {
                         width: '100%',
                         outline: 'none',
                         resize: 'none',
-                        fontSize: '0.95rem',
+                        fontSize: '1rem',
                         fontFamily: 'inherit',
                     }}
                 />
@@ -186,7 +186,7 @@ export default function EditChannel({ timetable, aiTheme }: Props) {
                                     width: '100%',
                                     outline: 'none',
                                     resize: 'none',
-                                    fontSize: '0.9rem',
+                                    fontSize: '1rem',
                                     fontFamily: 'inherit',
                                     lineHeight: 1.6,
                                 }}
@@ -212,7 +212,7 @@ export default function EditChannel({ timetable, aiTheme }: Props) {
                                     color: '#fff',
                                     width: '100%',
                                     outline: 'none',
-                                    fontSize: '0.9rem',
+                                    fontSize: '1rem',
                                     fontFamily: 'inherit',
                                 }}
                             />

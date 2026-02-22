@@ -7,6 +7,13 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+html {
+  /* Prevent iOS font inflation */
+  -webkit-text-size-adjust: 100%;
+  /* Remove tap highlight on iOS */
+  -webkit-tap-highlight-color: transparent;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -19,6 +26,8 @@ body {
   font-family: var(--font-sans);
   line-height: 1.5;
   min-height: 100vh;
+  /* Use dynamic viewport height on modern mobile browsers */
+  min-height: 100dvh;
 }
 
 a {
@@ -36,8 +45,12 @@ button {
   color: inherit;
   font: inherit;
   cursor: pointer;
+  /* Prevent double-tap zoom on buttons */
+  touch-action: manipulation;
 }
 
 input, textarea {
   font-family: inherit;
+  /* Prevent iOS zoom on focus – min 16px */
+  font-size: max(1rem, 16px);
 }

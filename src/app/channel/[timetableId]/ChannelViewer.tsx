@@ -112,6 +112,34 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
     const hasStartedRef = useRef(false);
     useEffect(() => { hasStartedRef.current = hasStarted; }, [hasStarted]);
 
+    // Touch swipe state for channel navigation
+    const touchStartXRef = useRef<number | null>(null);
+    const touchStartYRef = useRef<number | null>(null);
+
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
+        touchStartXRef.current = e.touches[0].clientX;
+        touchStartYRef.current = e.touches[0].clientY;
+    }, []);
+
+    const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+        if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+        const dx = e.changedTouches[0].clientX - touchStartXRef.current;
+        const dy = e.changedTouches[0].clientY - touchStartYRef.current;
+        touchStartXRef.current = null;
+        touchStartYRef.current = null;
+        // Require a predominantly horizontal swipe of at least 60px
+        if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        if (channelIds.length <= 1) return;
+        const suffix = hasStartedRef.current ? '?autoplay=1' : '';
+        if (dx < 0) {
+            const id = channelIds[(currentIndex + 1) % channelIds.length];
+            router.push(`/channel/${id}${suffix}`);
+        } else {
+            const id = channelIds[(currentIndex - 1 + channelIds.length) % channelIds.length];
+            router.push(`/channel/${id}${suffix}`);
+        }
+    }, [channelIds, currentIndex, router]);
+
     // Ref so keyboard handler always sees latest handleTurnOn without stale closure
     const handleTurnOnRef = useRef<() => Promise<void>>(() => Promise.resolve());
 
@@ -246,7 +274,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
     }
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             {!hasStarted ? (
                 <div className={styles.standbyScreen} onClick={handleTurnOn}>
                     <button className={styles.powerButton}>
