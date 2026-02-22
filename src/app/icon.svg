@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#000"/>
+
+  <!-- "t" letter -->
+  <text
+    x="16" y="25"
+    text-anchor="middle"
+    font-family="system-ui, -apple-system, sans-serif"
+    font-size="26"
+    font-weight="700"
+    letter-spacing="-1"
+    fill="white"
+  >t</text>
+
+  <!-- Scanline pattern (matching .scanlines CSS: 4px repeat, bottom 2px dark, opacity 0.4) -->
+  <defs>
+    <pattern id="scanlines" x="0" y="0" width="32" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="2" width="32" height="2" fill="rgba(0,0,0,0.25)"/>
+    </pattern>
+  </defs>
+  <rect width="32" height="32" fill="url(#scanlines)" opacity="0.4"/>
+</svg>
