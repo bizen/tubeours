@@ -37,12 +37,18 @@ export default async function Dashboard() {
             .limit(MAX_CHANNELS),
         supabase
             .from('channel_follows')
-            .select('timetable_id, timetables(id, title, description, is_public, timetable_slots(count))')
+            .select('timetable_id')
             .eq('user_id', user.id),
     ]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const followedTimetables = (followRows ?? []).map((f: any) => Array.isArray(f.timetables) ? f.timetables[0] : f.timetables).filter(Boolean);
+    const followedTimetableIds = (followRows ?? []).map(f => f.timetable_id);
+    const { data: followedTimetablesRaw } = followedTimetableIds.length > 0
+        ? await supabase
+            .from('timetables')
+            .select('id, title, description, is_public, timetable_slots(count)')
+            .in('id', followedTimetableIds)
+        : { data: [] };
+    const followedTimetables = followedTimetablesRaw ?? [];
     const followedIds = new Set(followedTimetables.map((t: { id: string }) => t.id));
 
     const allIds = [...(timetables ?? []), ...followedTimetables].map((t: { id: string }) => t.id);

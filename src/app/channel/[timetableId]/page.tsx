@@ -30,13 +30,18 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
             .limit(9),
         supabase
             .from('channel_follows')
-            .select('timetable_id, timetables(id, title, description, is_public, timetable_slots(count))')
+            .select('timetable_id')
             .eq('user_id', user.id),
     ]);
 
-    const followedTimetables = (followRows ?? [])
-        .map((f: { timetable_id: string; timetables: unknown }) => Array.isArray(f.timetables) ? f.timetables[0] : f.timetables)
-        .filter(Boolean) as { id: string; title: string; description: string | null; is_public: boolean; timetable_slots: { count: number }[] }[];
+    const followedTimetableIds = (followRows ?? []).map(f => f.timetable_id);
+    const { data: followedTimetablesRaw } = followedTimetableIds.length > 0
+        ? await supabase
+            .from('timetables')
+            .select('id, title, description, is_public, timetable_slots(count)')
+            .in('id', followedTimetableIds)
+        : { data: [] };
+    const followedTimetables = (followedTimetablesRaw ?? []) as { id: string; title: string; description: string | null; is_public: boolean; timetable_slots: { count: number }[] }[];
 
     const allTimetables = [...(ownedTimetables ?? []), ...followedTimetables];
 
