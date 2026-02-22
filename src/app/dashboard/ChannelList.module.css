@@ -133,7 +133,6 @@
   gap: 0.7rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-top: 0.65rem;
-  justify-content: flex-end;
 }
 
 .count {
@@ -159,6 +158,10 @@
   color: rgba(255, 255, 255, 0.2);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
+}
+
+.footerSpacer {
+  flex: 1;
 }
 
 .linkSchedule {

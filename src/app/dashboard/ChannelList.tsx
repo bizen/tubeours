@@ -105,6 +105,7 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                     {t.is_public && (followerCounts[t.id] ?? 0) > 0 && (
                                         <span className={styles.followerCount}>👀 {followerCounts[t.id]}</span>
                                     )}
+                                    <span className={styles.footerSpacer} />
                                     {onOpenSchedule ? (
                                         <button className={styles.linkSchedule} onClick={() => onOpenSchedule(t.id, t.title)}>Schedule</button>
                                     ) : (
