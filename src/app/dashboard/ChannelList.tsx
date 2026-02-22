@@ -37,6 +37,8 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
     const [confirmingId, setConfirmingId] = useState<string | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
 
+    const allChannels = [...timetables, ...followed].slice(0, MAX_CHANNELS);
+
     const handleUnfollow = async (id: string) => {
         setFollowed(f => f.filter(t => t.id !== id));
         const supabase = createClient();
@@ -65,11 +67,11 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
     };
 
     return (
-        <>
         <div className={styles.grid}>
             {Array.from({ length: MAX_CHANNELS }).map((_, i) => {
-                const t = timetables[i];
+                const t = allChannels[i];
                 const num = String(i + 1).padStart(2, '0');
+                const isFollowed = t ? (followedIds?.has(t.id) ?? false) : false;
                 const isConfirming = t && confirmingId === t.id;
 
                 if (t) {
@@ -115,40 +117,53 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                 </div>
                             </div>
 
-                            {/* Share button (only when public) */}
-                            {t.is_public && (
+                            {isFollowed ? (
+                                /* Imported channel: unfollow button only */
                                 <button
-                                    className={`${styles.shareBtn} ${copiedId === t.id ? styles.shareBtnCopied : ''}`}
-                                    onClick={() => handleShare(t.id)}
-                                    title="Copy link"
+                                    className={styles.trashBtn}
+                                    onClick={() => handleUnfollow(t.id)}
+                                    title="Unfollow"
                                 >
-                                    <Link2 size={12} />
+                                    <Trash2 size={12} />
                                 </button>
-                            )}
+                            ) : (
+                                <>
+                                    {/* Share button (only when public) */}
+                                    {t.is_public && (
+                                        <button
+                                            className={`${styles.shareBtn} ${copiedId === t.id ? styles.shareBtnCopied : ''}`}
+                                            onClick={() => handleShare(t.id)}
+                                            title="Copy link"
+                                        >
+                                            <Link2 size={12} />
+                                        </button>
+                                    )}
 
-                            {/* Edit button */}
-                            <Link href={`/dashboard/edit/${t.id}`} className={styles.editBtn} title="Edit channel">
-                                <Pencil size={12} />
-                            </Link>
+                                    {/* Edit button */}
+                                    <Link href={`/dashboard/edit/${t.id}`} className={styles.editBtn} title="Edit channel">
+                                        <Pencil size={12} />
+                                    </Link>
 
-                            {/* Delete button */}
-                            <button
-                                className={styles.trashBtn}
-                                onClick={() => setConfirmingId(t.id)}
-                                title="Delete channel"
-                            >
-                                <Trash2 size={12} />
-                            </button>
+                                    {/* Delete button */}
+                                    <button
+                                        className={styles.trashBtn}
+                                        onClick={() => setConfirmingId(t.id)}
+                                        title="Delete channel"
+                                    >
+                                        <Trash2 size={12} />
+                                    </button>
 
-                            {/* Confirm overlay */}
-                            {isConfirming && (
-                                <div className={styles.confirmOverlay}>
-                                    <p className={styles.confirmText}>Delete &ldquo;{t.title}&rdquo;?<br />This cannot be undone.</p>
-                                    <div className={styles.confirmBtns}>
-                                        <button className={styles.cancelBtn} onClick={() => setConfirmingId(null)}>Cancel</button>
-                                        <button className={styles.deleteBtn} onClick={() => handleDelete(t.id)}>Delete</button>
-                                    </div>
-                                </div>
+                                    {/* Confirm overlay */}
+                                    {isConfirming && (
+                                        <div className={styles.confirmOverlay}>
+                                            <p className={styles.confirmText}>Delete &ldquo;{t.title}&rdquo;?<br />This cannot be undone.</p>
+                                            <div className={styles.confirmBtns}>
+                                                <button className={styles.cancelBtn} onClick={() => setConfirmingId(null)}>Cancel</button>
+                                                <button className={styles.deleteBtn} onClick={() => handleDelete(t.id)}>Delete</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     );
@@ -158,44 +173,12 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                 return (
                     <div key={`empty-${i}`} className={styles.empty}>
                         <span className={styles.numEmpty}>{num}</span>
-                        {i === timetables.length && timetables.length < MAX_CHANNELS && (
+                        {i === allChannels.length && allChannels.length < MAX_CHANNELS && (
                             <Link href="/dashboard/create" className={styles.createLink} title="New channel">+</Link>
                         )}
                     </div>
                 );
             })}
         </div>
-
-        {followed.length > 0 && (
-            <div style={{ flexShrink: 0, borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '0.75rem', marginTop: '0.75rem' }}>
-                <p style={{ fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', marginBottom: '0.5rem' }}>
-                    Following
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    {followed.map(t => (
-                        <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.45rem 0.6rem', borderRadius: '4px', background: '#0a0a0a' }}>
-                            <Link href={`/channel/${t.id}`} style={{ flex: 1, textDecoration: 'none', color: 'rgba(255,255,255,0.65)', fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                {t.title}
-                            </Link>
-                            {currentSlots[t.id] && (
-                                <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.28)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '12rem', flexShrink: 0 }}>
-                                    {currentSlots[t.id].title}
-                                </span>
-                            )}
-                            <button
-                                onClick={() => handleUnfollow(t.id)}
-                                title="Unfollow"
-                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.18)', padding: '0.15rem', display: 'flex', alignItems: 'center', flexShrink: 0 }}
-                                onMouseOver={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,80,80,0.7)'; }}
-                                onMouseOut={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.18)'; }}
-                            >
-                                <Trash2 size={11} />
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        )}
-        </>
     );
 }

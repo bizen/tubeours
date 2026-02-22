@@ -102,7 +102,7 @@ export default async function Dashboard() {
         }
     }
 
-    const count = timetables?.length ?? 0;
+    const count = (timetables?.length ?? 0) + followedTimetables.length;
     const atLimit = count >= MAX_CHANNELS;
 
     return (
@@ -132,7 +132,7 @@ export default async function Dashboard() {
                     )}
                 </div>
 
-                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+                <div style={{ flex: 1, minHeight: 0 }}>
                     <ChannelList timetables={timetables ?? []} followedTimetables={followedTimetables} followedIds={followedIds} currentSlots={currentSlots} nextSlots={nextSlots} followerCounts={followerCounts} />
                 </div>
             </div>
