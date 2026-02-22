@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import YouTubePlayer from '@/components/player/YouTubePlayer';
 import { Power, LayoutGrid } from 'lucide-react';
 import DashboardOverlay from './DashboardOverlay';
+import ScheduleOverlay from './ScheduleOverlay';
 import { createClient } from '@/lib/supabase/client';
 import Link from 'next/link';
 import styles from '../../page.module.css';
@@ -88,9 +89,10 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
     const [time, setTime] = useState('');
     const [displayMode, setDisplayMode] = useState<'fill' | 'fit'>(initialDisplayMode);
     const [showOverlay, setShowOverlay] = useState(false);
+    const [scheduleTarget, setScheduleTarget] = useState<{ id: string; title: string } | null>(null);
 
     const showOverlayRef = useRef(false);
-    useEffect(() => { showOverlayRef.current = showOverlay; }, [showOverlay]);
+    useEffect(() => { showOverlayRef.current = showOverlay || !!scheduleTarget; }, [showOverlay, scheduleTarget]);
 
     const handleModeChange = async (mode: 'fill' | 'fit') => {
         setDisplayMode(mode);
@@ -333,6 +335,15 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                     currentSlots={overlayCurrentSlots}
                     nextSlots={overlayNextSlots}
                     onClose={() => setShowOverlay(false)}
+                    onOpenSchedule={(id, title) => { setShowOverlay(false); setScheduleTarget({ id, title }); }}
+                />
+            )}
+
+            {scheduleTarget && (
+                <ScheduleOverlay
+                    timetableId={scheduleTarget.id}
+                    timetableTitle={scheduleTarget.title}
+                    onClose={() => setScheduleTarget(null)}
                 />
             )}
 

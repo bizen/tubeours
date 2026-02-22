@@ -21,13 +21,14 @@ interface Props {
     timetables: Timetable[];
     currentSlots: Record<string, SlotInfo>;
     nextSlots: Record<string, NextSlotInfo>;
+    onOpenSchedule?: (timetableId: string, timetableTitle: string) => void;
 }
 
 function formatTime(iso: string): string {
     return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-export default function ChannelList({ timetables: initial, currentSlots, nextSlots }: Props) {
+export default function ChannelList({ timetables: initial, currentSlots, nextSlots, onOpenSchedule }: Props) {
     const [timetables, setTimetables] = useState<Timetable[]>(initial);
     const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
@@ -82,7 +83,11 @@ export default function ChannelList({ timetables: initial, currentSlots, nextSlo
                                 <div className={styles.footer}>
                                     <span className={styles.count}>{t.timetable_slots[0]?.count || 0} videos</span>
                                     {t.is_public && <span className={styles.badge}>Public</span>}
-                                    <Link href={`/channel/${t.id}/schedule`} className={styles.linkSchedule}>Schedule</Link>
+                                    {onOpenSchedule ? (
+                                        <button className={styles.linkSchedule} onClick={() => onOpenSchedule(t.id, t.title)}>Schedule</button>
+                                    ) : (
+                                        <Link href={`/channel/${t.id}/schedule`} className={styles.linkSchedule}>Schedule</Link>
+                                    )}
                                     <Link href={`/channel/${t.id}`} className={styles.linkWatch}>Watch →</Link>
                                 </div>
                             </div>

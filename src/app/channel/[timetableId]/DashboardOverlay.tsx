@@ -19,11 +19,12 @@ interface Props {
     currentSlots: Record<string, SlotInfo>;
     nextSlots: Record<string, NextSlotInfo>;
     onClose: () => void;
+    onOpenSchedule?: (timetableId: string, timetableTitle: string) => void;
 }
 
 const MAX_CHANNELS = 9;
 
-export default function DashboardOverlay({ timetables, currentSlots, nextSlots, onClose }: Props) {
+export default function DashboardOverlay({ timetables, currentSlots, nextSlots, onClose, onOpenSchedule }: Props) {
     const atLimit = timetables.length >= MAX_CHANNELS;
 
     useEffect(() => {
@@ -80,6 +81,7 @@ export default function DashboardOverlay({ timetables, currentSlots, nextSlots, 
                         timetables={timetables}
                         currentSlots={currentSlots}
                         nextSlots={nextSlots}
+                        onOpenSchedule={onOpenSchedule}
                     />
                 </div>
             </div>
