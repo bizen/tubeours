@@ -98,6 +98,9 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
         await supabase.auth.updateUser({ data: { display_mode: mode } });
     };
     const [keyFeedback, setKeyFeedback] = useState<{ kind: 'left' | 'right' | 'num'; n?: number; id: number; empty?: boolean } | null>(null);
+    const [volume, setVolume] = useState(100);
+    const [showVolume, setShowVolume] = useState(false);
+    const volumeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     // Ref so keyboard handler always sees latest hasStarted without re-registering
     const hasStartedRef = useRef(false);
@@ -152,6 +155,29 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                 } else {
                     handleTurnOnRef.current();
                 }
+                return;
+            }
+
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setVolume(v => {
+                    const next = Math.min(100, v + 10);
+                    clearTimeout(volumeTimerRef.current);
+                    setShowVolume(true);
+                    volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
+                    return next;
+                });
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setVolume(v => {
+                    const next = Math.max(0, v - 10);
+                    clearTimeout(volumeTimerRef.current);
+                    setShowVolume(true);
+                    volumeTimerRef.current = setTimeout(() => setShowVolume(false), 1200);
+                    return next;
+                });
                 return;
             }
 
@@ -268,6 +294,7 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                             startSeconds={startSeconds}
                             onEnd={handleVideoEnd}
                             displayMode={displayMode}
+                            volume={volume}
                         />
                     </main>
 
@@ -308,6 +335,28 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
                     nextSlots={overlayNextSlots}
                     onClose={() => setShowOverlay(false)}
                 />
+            )}
+
+            {showVolume && (
+                <div style={{
+                    position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)',
+                    display: 'flex', alignItems: 'center', gap: '0.6rem',
+                    background: 'rgba(0,0,0,0.6)', borderRadius: '999px',
+                    padding: '0.4rem 0.9rem', zIndex: 100, pointerEvents: 'none',
+                }}>
+                    <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em' }}>
+                        {volume === 0 ? '🔇' : volume < 40 ? '🔈' : volume < 80 ? '🔉' : '🔊'}
+                    </span>
+                    <div style={{ display: 'flex', gap: '2px' }}>
+                        {Array.from({ length: 10 }).map((_, i) => (
+                            <div key={i} style={{
+                                width: '3px', height: '14px', borderRadius: '2px',
+                                background: i < volume / 10 ? '#fff' : 'rgba(255,255,255,0.2)',
+                            }} />
+                        ))}
+                    </div>
+                    <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', minWidth: '2.5ch' }}>{volume}</span>
+                </div>
             )}
 
             {keyFeedback && (

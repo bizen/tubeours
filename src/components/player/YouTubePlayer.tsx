@@ -8,9 +8,10 @@ interface YouTubePlayerProps {
     startSeconds?: number;
     onEnd?: () => void;
     displayMode?: 'fill' | 'fit';
+    volume?: number; // 0–100
 }
 
-export default function YouTubePlayer({ videoId, startSeconds = 0, onEnd, displayMode = 'fill' }: YouTubePlayerProps) {
+export default function YouTubePlayer({ videoId, startSeconds = 0, onEnd, displayMode = 'fill', volume = 100 }: YouTubePlayerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const playerRef = useRef<any>(null);
@@ -63,6 +64,13 @@ export default function YouTubePlayer({ videoId, startSeconds = 0, onEnd, displa
             }
         };
     }, [videoId, startSeconds, onEnd]);
+
+    // Sync volume whenever it changes and player is ready
+    useEffect(() => {
+        if (isReady && playerRef.current) {
+            playerRef.current.setVolume(volume);
+        }
+    }, [volume, isReady]);
 
     return (
         <div className={styles.playerWrapper}>
