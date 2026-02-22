@@ -59,6 +59,7 @@ export default function YouTubePlayer({ videoId, startSeconds = 0, onEnd, displa
         }
 
         return () => {
+            setIsReady(false);
             if (playerRef.current) {
                 playerRef.current.destroy();
             }
