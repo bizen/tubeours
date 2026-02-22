@@ -359,21 +359,27 @@ export default function ChannelViewer({ timetableId, timetableTitle, initialSlot
             )}
 
             {keyFeedback && (
-                <div
-                    key={keyFeedback.id}
-                    className={`${styles.keycap}${keyFeedback.empty ? ` ${styles.keycapEmpty}` : ''}`}
-                    style={
-                        keyFeedback.kind === 'left'
-                            ? { position: 'fixed', left: '2.5rem', top: '50%', marginTop: '-1.375rem', zIndex: 100, pointerEvents: 'none' }
-                            : keyFeedback.kind === 'right'
-                            ? { position: 'fixed', right: '2.5rem', top: '50%', marginTop: '-1.375rem', zIndex: 100, pointerEvents: 'none' }
-                            : (keyFeedback.kind === 'up' || keyFeedback.kind === 'down')
-                            ? { position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', zIndex: 100, pointerEvents: 'none' }
-                            : { position: 'fixed', bottom: '3rem', left: `calc(${(keyFeedback.n! - 1) / 8} * (100% - 7rem) + 2.5rem)`, zIndex: 100, pointerEvents: 'none' }
-                    }
-                >
-                    {keyFeedback.kind === 'left' ? '←' : keyFeedback.kind === 'right' ? '→' : keyFeedback.kind === 'up' ? '↑' : keyFeedback.kind === 'down' ? '↓' : keyFeedback.n}
-                </div>
+                (keyFeedback.kind === 'up' || keyFeedback.kind === 'down') ? (
+                    <div style={{ position: 'fixed', bottom: '3rem', left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 100, pointerEvents: 'none' }}>
+                        <div key={keyFeedback.id} className={styles.keycap}>
+                            {keyFeedback.kind === 'up' ? '↑' : '↓'}
+                        </div>
+                    </div>
+                ) : (
+                    <div
+                        key={keyFeedback.id}
+                        className={`${styles.keycap}${keyFeedback.empty ? ` ${styles.keycapEmpty}` : ''}`}
+                        style={
+                            keyFeedback.kind === 'left'
+                                ? { position: 'fixed', left: '2.5rem', top: '50%', marginTop: '-1.375rem', zIndex: 100, pointerEvents: 'none' }
+                                : keyFeedback.kind === 'right'
+                                ? { position: 'fixed', right: '2.5rem', top: '50%', marginTop: '-1.375rem', zIndex: 100, pointerEvents: 'none' }
+                                : { position: 'fixed', bottom: '3rem', left: `calc(${(keyFeedback.n! - 1) / 8} * (100% - 7rem) + 2.5rem)`, zIndex: 100, pointerEvents: 'none' }
+                        }
+                    >
+                        {keyFeedback.kind === 'left' ? '←' : keyFeedback.kind === 'right' ? '→' : keyFeedback.n}
+                    </div>
+                )
             )}
         </div>
     );
