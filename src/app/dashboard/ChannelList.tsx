@@ -107,8 +107,8 @@ export default function ChannelList({ timetables: initial, followedTimetables: i
                                         ? <span className={styles.badge}>PUBLIC 📺</span>
                                         : t.is_public && <span className={styles.badge}>PUBLIC 📡</span>
                                     }
-                                    {(followerCounts[t.id] ?? 0) > 0 && (
-                                        <span className={styles.followerCount}>👀 {followerCounts[t.id]}</span>
+                                    {(isFollowed || t.is_public) && (
+                                        <span className={styles.followerCount}>👀 {followerCounts[t.id] ?? 0}</span>
                                     )}
                                     <span className={styles.footerSpacer} />
                                     {onOpenSchedule ? (
