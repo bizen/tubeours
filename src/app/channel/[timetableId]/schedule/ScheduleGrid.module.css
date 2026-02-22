@@ -1,0 +1,105 @@
+.daySlots {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0.5rem;
+  scrollbar-width: none;
+}
+
+.daySlots::-webkit-scrollbar {
+  display: none;
+}
+
+.slot {
+  position: relative;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: #0f0f0f;
+}
+
+.slot:hover {
+  border-color: rgba(255, 255, 255, 0.11);
+  background-color: #151515;
+}
+
+.slot.isNow {
+  border-color: rgba(169, 255, 28, 0.35);
+  background-color: rgba(169, 255, 28, 0.05);
+}
+
+.slot.isPast {
+  opacity: 0.28;
+}
+
+.slotMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.slotTime {
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.3);
+  width: 2.6rem;
+  flex-shrink: 0;
+}
+
+.isNow .slotTime {
+  color: #A9FF1C;
+}
+
+.nowBadge {
+  font-size: 0.52rem;
+  font-weight: 800;
+  color: #A9FF1C;
+  letter-spacing: 0.1em;
+  background: rgba(169, 255, 28, 0.15);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+}
+
+.slotDuration {
+  margin-left: auto;
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.18);
+  padding-right: 1.4rem;
+}
+
+.slotTitle {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 3rem;
+  padding-right: 1.6rem;
+}
+
+.isNow .slotTitle {
+  color: #fff;
+}
+
+.trashBtn {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0);
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.slot:hover .trashBtn {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.trashBtn:hover {
+  color: rgba(255, 80, 80, 0.8) !important;
+}

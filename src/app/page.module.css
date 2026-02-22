@@ -1,0 +1,230 @@
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.standbyScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #050505;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.standbyScreen:hover {
+  background-color: #0a0a0a;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.powerButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.powerText {
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.header {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  z-index: 10;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  font-family: inherit;
+  user-select: none;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  opacity: 0.8;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.95),
+     1px -1px 0 rgba(0,0,0,0.95),
+    -1px  1px 0 rgba(0,0,0,0.95),
+     1px  1px 0 rgba(0,0,0,0.95);
+}
+
+.channelInfo {
+  font-size: 0.875rem;
+  font-weight: 400;
+  opacity: 0.6;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.95),
+     1px -1px 0 rgba(0,0,0,0.95),
+    -1px  1px 0 rgba(0,0,0,0.95),
+     1px  1px 0 rgba(0,0,0,0.95);
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+}
+
+.powerOffButton {
+  position: absolute;
+  bottom: 2rem;
+  right: 3rem;
+  z-index: 30;
+  color: rgba(255, 255, 255, 0.4);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.powerOffButton:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dashboardButton {
+  position: absolute;
+  bottom: 2rem;
+  right: 5.5rem;
+  z-index: 30;
+  color: rgba(255, 255, 255, 0.4);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.dashboardButton:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.clockGroup {
+  position: absolute;
+  top: 2rem;
+  right: 3rem;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.clock {
+  font-size: 2.75rem;
+  font-weight: 200;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.95),
+     1px -1px 0 rgba(0,0,0,0.95),
+    -1px  1px 0 rgba(0,0,0,0.95),
+     1px  1px 0 rgba(0,0,0,0.95);
+}
+
+.nextInfo {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.03em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 22rem;
+  text-shadow:
+    -1px -1px 0 rgba(0,0,0,0.95),
+     1px -1px 0 rgba(0,0,0,0.95),
+    -1px  1px 0 rgba(0,0,0,0.95),
+     1px  1px 0 rgba(0,0,0,0.95);
+}
+
+.scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  /* Simulating old CRT TV scanlines */
+  opacity: 0.4;
+}
+
+/* ── Keycap feedback ── */
+.keycap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0.55rem;
+  background: linear-gradient(160deg, rgba(42, 42, 42, 0.97) 0%, rgba(22, 22, 22, 0.97) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.09);
+  border-radius: 5px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.75),
+    0 6px 18px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(8px);
+  animation: keycapFade 0.85s ease-out forwards;
+  user-select: none;
+}
+
+.keycapEmpty {
+  border-color: rgba(220, 60, 60, 0.45);
+  border-bottom-color: rgba(180, 30, 30, 0.25);
+  color: rgba(255, 80, 80, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.75),
+    0 6px 18px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 100, 100, 0.07);
+}
+
+@keyframes keycapFade {
+  0%   { opacity: 0; transform: scale(0.75); }
+  13%  { opacity: 1; transform: scale(1.06); }
+  22%  { opacity: 1; transform: scale(1); }
+  72%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.94); }
+}

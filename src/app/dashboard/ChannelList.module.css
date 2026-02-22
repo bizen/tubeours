@@ -1,0 +1,289 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, calc((100% - 2px) / 3));
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  height: 100%;
+}
+
+/* ── Filled card ── */
+.card {
+  position: relative;
+  background-color: #080808;
+  padding: 1.1rem 1.1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.card:hover {
+  background-color: #0e0e0e;
+}
+
+/* ── Empty slot ── */
+.empty {
+  background-color: #040404;
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem;
+  position: relative;
+  min-height: 0;
+}
+
+/* ── Channel number ── */
+.num {
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.card:hover .num {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.numEmpty {
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.18);
+}
+
+/* ── Card body ── */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0.75rem;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.2rem;
+  padding-right: 1.4rem;
+}
+
+.desc {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+  min-height: calc(1.4em * 2);
+  margin-bottom: 0;
+}
+
+/* ── Now playing / next ── */
+.scheduleInfo {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.65rem;
+  margin-top: 0.65rem;
+}
+
+.nowPlaying {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  overflow: hidden;
+}
+
+.nowDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #A9FF1C;
+  flex-shrink: 0;
+}
+
+.nowTitle {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nextUp {
+  font-size: 0.63rem;
+  color: rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Footer ── */
+.footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.65rem;
+}
+
+.count {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.2);
+  flex: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  font-size: 0.58rem;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 2px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.linkSchedule {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.28);
+  text-decoration: none;
+}
+
+.linkSchedule:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.linkWatch {
+  font-size: 0.7rem;
+  color: #A9FF1C;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.linkWatch:hover {
+  color: #c8ff6a;
+}
+
+/* ── Edit button ── */
+.editBtn {
+  position: absolute;
+  top: 0.7rem;
+  right: 2.1rem;
+  color: rgba(255, 255, 255, 0);
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.card:hover .editBtn {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.editBtn:hover {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* ── Delete button ── */
+.trashBtn {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0);
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.card:hover .trashBtn {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.trashBtn:hover {
+  color: rgba(255, 80, 80, 0.7) !important;
+}
+
+/* ── Delete confirm overlay ── */
+.confirmOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 3, 3, 0.96);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.25rem;
+}
+
+.confirmText {
+  font-size: 0.75rem;
+  color: rgba(255, 110, 110, 0.9);
+  text-align: center;
+  line-height: 1.45;
+}
+
+.confirmBtns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cancelBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.deleteBtn {
+  background: rgba(200, 40, 40, 0.75);
+  border: none;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.85rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  background: rgba(220, 50, 50, 0.95);
+}
+
+/* ── Empty slot – create link ── */
+.createLink {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.08);
+  font-size: 1.5rem;
+  font-weight: 200;
+}
+
+.createLink:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.25);
+}
