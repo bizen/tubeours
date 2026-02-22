@@ -132,7 +132,7 @@ export default async function Dashboard() {
                     )}
                 </div>
 
-                <div style={{ flex: 1, minHeight: 0 }}>
+                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
                     <ChannelList timetables={timetables ?? []} followedTimetables={followedTimetables} followedIds={followedIds} currentSlots={currentSlots} nextSlots={nextSlots} followerCounts={followerCounts} />
                 </div>
             </div>
